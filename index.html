@@ -10,7 +10,7 @@
             margin: 0;
             padding: 0;
         }
-
+        
         .wrap {
             position: relative;
             width: 1080px;
@@ -18,7 +18,7 @@
             margin: 100px auto;
             border: 1px solid #cccccc;
         }
-
+        
         .wrap-big {
             position: absolute;
             width: 450px;
@@ -27,12 +27,12 @@
             left: 0;
             border: 1px solid #cccccc;
         }
-
+        
         .wrap-big img {
             width: 100%;
             height: 100%;
         }
-
+        
         .wrap-big .mask {
             position: absolute;
             top: 0;
@@ -42,13 +42,13 @@
             background-color: rgba(255, 255, 0, .5);
             display: none;
         }
-
+        
         .wrap-small {
             position: absolute;
             top: 460px;
             left: 0;
         }
-
+        
         .wrap-small li {
             float: left;
             width: 45px;
@@ -56,16 +56,16 @@
             list-style: none;
             opacity: 0.5;
         }
-
+        
         .wrap-small li img {
             width: 100%;
             height: 100%;
         }
-
+        
         .wrap-small .active {
             opacity: 1;
         }
-
+        
         .wrap-large {
             position: absolute;
             width: 500px;
@@ -74,14 +74,15 @@
             left: 452px;
             border: 1px solid #cccccc;
             overflow: hidden;
+            display: none;
         }
     </style>
 </head>
 
 <body>
-    <div class="wrap">
+    <div class="wrap" id="wrap">
         <div class="wrap-big" id="wrap-big">
-            <img src="./imgs/big-001.jpg" alt="">
+            <img src="./imgs/big-001.jpg" alt="" id="bimg">
             <span class="mask" id="mask"></span>
         </div>
         <ul class="wrap-small">
@@ -92,23 +93,26 @@
                 <img src="./imgs/small-002.jpg" alt="">
             </li>
         </ul>
-        <div class="wrap-large">
+        <div class="wrap-large" id="wrap-large">
             <img src="./imgs/large-001.jpg" alt="">
         </div>
     </div>
 </body>
 <script>
     // 获取li 和big
+    var wrap = document.getElementById('wrap')
     var smallImgs = document.querySelectorAll('.wrap-small li')
     var bigImg = document.querySelector('.wrap-big img')
+    var bImg = document.getElementById('bimg')
     var largeImg = document.querySelector('.wrap-large img')
     var wrapBig = document.getElementById('wrap-big')
     var mask = document.getElementById('mask')
-    // 遍历smallImg,获取其中的img
+    var wrapLarge = document.getElementById('wrap-large')
+        // 遍历smallImg,获取其中的img
     for (var i = 0, len = smallImgs.length; i < len; i++) {
         // 当鼠标穿过事件触发
         smallImgs[i].index = i;
-        smallImgs[i].onmouseover = function () {
+        smallImgs[i].onmouseover = function() {
             for (var j = 0; j < len; j++) {
                 smallImgs[j].className = ''
             }
@@ -117,17 +121,23 @@
             largeImg.src = './imgs/large-00' + (this.index + 1) + '.jpg'
         }
     }
-    wrapBig.onmouseover = function () {
+    wrapBig.onmouseenter = function() {
         mask.style.display = 'block';
-        wrapBig.onmousemove = function () {
-            var w = event.pageX - mask.offsetLeft - mask.offsetWidth * 0.5
-            var h = event.pageY - mask.offsetTop - mask.offsetHeight * 0.5
-            mask.style.top = h + 'px';
-            mask.style.left = w + 'px';
+        wrapLarge.style.display = 'block'
+        wrapBig.onmousemove = function(event) {
+            var l = event.pageX - wrap.offsetLeft - mask.offsetWidth * 0.5
+            var t = event.pageY - wrap.offsetTop - mask.offsetHeight * 0.5
+            if (l < 0) {
+                l = 0
+            };
+            if (t < 0) {
+                t = 0
+            }
+            mask.style.left = l + 'px';
+            mask.style.top = t + 'px';
         }
 
     }
-
 </script>
 
 </html>
