@@ -10,7 +10,7 @@
             margin: 0;
             padding: 0;
         }
-        
+
         .wrap {
             position: relative;
             width: 1080px;
@@ -18,7 +18,7 @@
             margin: 100px auto;
             border: 1px solid #cccccc;
         }
-        
+
         .wrap-big {
             position: absolute;
             width: 450px;
@@ -27,12 +27,12 @@
             left: 0;
             border: 1px solid #cccccc;
         }
-        
+
         .wrap-big img {
             width: 100%;
             height: 100%;
         }
-        
+
         .wrap-big .mask {
             position: absolute;
             top: 0;
@@ -42,13 +42,13 @@
             background-color: rgba(255, 255, 0, .5);
             display: none;
         }
-        
+
         .wrap-small {
             position: absolute;
             top: 460px;
             left: 0;
         }
-        
+
         .wrap-small li {
             float: left;
             width: 45px;
@@ -56,16 +56,16 @@
             list-style: none;
             opacity: 0.5;
         }
-        
+
         .wrap-small li img {
             width: 100%;
             height: 100%;
         }
-        
+
         .wrap-small .active {
             opacity: 1;
         }
-        
+
         .wrap-large {
             position: absolute;
             width: 500px;
@@ -74,6 +74,15 @@
             left: 452px;
             border: 1px solid #cccccc;
             overflow: hidden;
+        }
+
+        .wrap-large img {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #wrap-large {
             display: none;
         }
     </style>
@@ -104,15 +113,15 @@
     var smallImgs = document.querySelectorAll('.wrap-small li')
     var bigImg = document.querySelector('.wrap-big img')
     var bImg = document.getElementById('bimg')
-    var largeImg = document.querySelector('.wrap-large img')
     var wrapBig = document.getElementById('wrap-big')
     var mask = document.getElementById('mask')
     var wrapLarge = document.getElementById('wrap-large')
-        // 遍历smallImg,获取其中的img
+    var largeImg = document.querySelector('.wrap-large img')
+    // 遍历smallImg,获取其中的img
     for (var i = 0, len = smallImgs.length; i < len; i++) {
         // 当鼠标穿过事件触发
         smallImgs[i].index = i;
-        smallImgs[i].onmouseover = function() {
+        smallImgs[i].onmouseover = function () {
             for (var j = 0; j < len; j++) {
                 smallImgs[j].className = ''
             }
@@ -121,20 +130,32 @@
             largeImg.src = './imgs/large-00' + (this.index + 1) + '.jpg'
         }
     }
-    wrapBig.onmouseenter = function() {
+    wrapBig.onmouseenter = function () {
         mask.style.display = 'block';
         wrapLarge.style.display = 'block'
-        wrapBig.onmousemove = function(event) {
+        wrapBig.onmousemove = function (event) {
             var l = event.pageX - wrap.offsetLeft - mask.offsetWidth * 0.5
             var t = event.pageY - wrap.offsetTop - mask.offsetHeight * 0.5
             if (l < 0) {
                 l = 0
-            };
+            } else if (l > wrapBig.offsetWidth - mask.offsetWidth) {
+                l = wrapBig.offsetWidth - mask.offsetWidth
+            }
             if (t < 0) {
                 t = 0
+            } else if (t > wrapBig.offsetHeight - mask.offsetHeight) {
+                t = wrapBig.offsetHeight - mask.offsetHeight
             }
+            var procentX = l / (wrapBig.offsetWidth - mask.offsetWidth);
+            var procentY = t / (wrapBig.offsetHeight - mask.offsetHeight)
             mask.style.left = l + 'px';
             mask.style.top = t + 'px';
+            largeImg.style.left = (wrapLarge.offsetWidth - largeImg.offsetWidth) * procentX + 'px'
+            largeImg.style.top = (wrapLarge.offsetHeight - largeImg.offsetHeight) * procentY + 'px'
+            wrapBig.onmouseleave = function () {
+                mask.style.display = 'none';
+                wrapLarge.style.display = 'none'
+            }
         }
 
     }
